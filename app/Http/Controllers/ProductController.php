@@ -35,8 +35,9 @@ class ProductController extends Controller
                     // });
                 })
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
+                    $btn = '<a href="' . route('product.edit', $row->id) . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                    $btnAction = $btn . "<form action='" . route('product.destroy', $row->id) . "' method='post'>" . csrf_field() . "" . method_field("DELETE") . "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(' Yakin hapus data ? ');'>X</button></form>";
+                    return $btnAction;
                 })
                 ->rawColumns(['action'])
                 // ->make(true);
@@ -91,7 +92,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $merchant = Merchant::get();
+        return view('product.edit', compact('product','merchant'));
     }
 
     /**
@@ -103,7 +105,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->update($request->all());
+        return redirect()->route('product.index');
     }
 
     /**
@@ -114,6 +117,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()->route('product.index');
     }
 }
