@@ -42,6 +42,8 @@ class ProductController extends Controller
                 // ->make(true);
                 ->toJson();
         }
+
+        
     }
 
     /**
